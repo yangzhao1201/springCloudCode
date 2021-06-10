@@ -24,7 +24,9 @@ public class DeptConsumerController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String REST_URL_PREFIX = "http://localhost:8081";
+    //ribbon 负载均衡 地址应该是一个变量 所以应该通过服务名访问
+    //private static final String REST_URL_PREFIX = "http://localhost:8081";
+    private static final String REST_URL_PREFIX = "http://SPRINGCLOUD-PROVIDER-DEPT";
 
 
     @PostMapping("/consumer/dept/add")
@@ -32,12 +34,13 @@ public class DeptConsumerController {
         return restTemplate.postForObject(REST_URL_PREFIX+"/dept/add",dept,Boolean.class);
     }
 
-    @RequestMapping("/consumer/dept/get/{id}")
+    //produces = { "application/json;charset=UTF-8"} 设置eureka返回格式为json
+    @RequestMapping(value = "/consumer/dept/get/{id}",produces = { "application/json;charset=UTF-8"})
     public Dept queryById(@PathVariable("id") Long id){
         return restTemplate.getForObject(REST_URL_PREFIX+"/dept/get/"+id,Dept.class);
     }
 
-    @RequestMapping("/consumer/dept/list")
+    @RequestMapping(value = "/consumer/dept/list",produces = { "application/json;charset=UTF-8"})
     public List<Dept> queryAll(){
         return restTemplate.getForObject(REST_URL_PREFIX+"/dept/list",List.class);
     }
